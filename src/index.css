@@ -1,10 +1,18 @@
 body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  text-align: center;
+  /* text-align: center; */
   background-image: url(bjtable.jpg);
   background-size: cover;
   color: white;
   font-weight: bold;
+}
+
+span{
+  display: block;
+}
+
+#game-section{
+  text-align: center;
 }
 
 h1 {
@@ -15,15 +23,22 @@ h1 {
  font-style: italic;
 }
 
-button {
+button, input {
   color: #016f32;
-  width: 150 px;
+  width: 135px;
   background-color: goldenrod;
-  padding-top: 5 px;
-  padding-bottom: 5 px;
+  padding: 5px;
   font-weight: bold;
   border: none;
   border-radius: 2px;
-  margin: 2px 0px 2px 0px;
+  margin: 2px;
+}
+
+input{
+  background-color: rgb(216, 188, 115);
+  margin-bottom: 10px;
+  width: 125px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
