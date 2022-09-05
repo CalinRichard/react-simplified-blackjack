@@ -11,3 +11,5 @@
     }
     return randomNumber
   }
+
+  export const getSum = cards => cards.reduce((total, card) => total + card, 0)

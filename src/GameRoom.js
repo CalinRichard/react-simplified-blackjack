@@ -1,19 +1,18 @@
-import { useCallback, useState } from "react"
+import { useState } from "react"
 import Button from "./Button"
-import { getRandomCard } from "./CardUtil"
+import { getRandomCard, getSum } from "./CardUtil"
 import NameSection from "./NameSection"
 
+const defaultUserState = {
+  name: 'GUEST',
+  chips: 200
+}
 
 function GameRoom() {
   // Setup global state
-  const [user, setUser] = useState({
-    name: 'GUEST',
-    chips: 200
-  })
+  const [user, setUser] = useState(defaultUserState)
   const [playerCards, setPlayerCards] = useState([])
   const [dealerCards, setDealerCards] = useState([])
-  const [playerSum, setPlayerSum] = useState(0)
-  const [dealerSum, setDealerSum] = useState(0)
   const [isAlive, setIsAlive] = useState(false)
   const [message, setMessage] = useState("Want to play a round?")
 
@@ -30,11 +29,9 @@ function GameRoom() {
     const secondCard = getRandomCard([firstCard])
     // player always starts with 2 cards
     setPlayerCards([firstCard, secondCard])
-    setPlayerSum(firstCard + secondCard)
     const dealerCard = getRandomCard([])
     // dealer always shows 1 card untill player stands
     setDealerCards([dealerCard])
-    setDealerSum(dealerCard)
     // the newPlayerSum variable was defined in order to be able to render the corect message via bustOrBj function in a synchronous way
     let newPlayerSum = (firstCard + secondCard)
     bustOrBj(newPlayerSum)
@@ -48,9 +45,6 @@ function GameRoom() {
       const randomCard = getRandomCard([])
       playerCards.push(randomCard)
       setPlayerCards([...playerCards])
-      setPlayerSum(playerCards.reduce((total, card) => {
-        return total + card
-      }, 0))
       // the newPlayerSum variable was defined in order to be able to be able to render the corect message via bustOrBj function in a synchronous way
       let newPlayerSum = (playerCards.reduce((total, card) => {
         return total + card
@@ -68,17 +62,15 @@ function GameRoom() {
     // as soon as the stand function is called, the isAlive state will return to it's initial state (false) in order for the player to be able to start a new game
     setIsAlive(false)
     // the two variables (newDealerSum and newDealerCards) were defined in order to be able to deal with the while loop in a synchronous way and to avoid manually changing the react state
-    let newDealerSum = dealerSum
+    let newDealerSum = getSum(dealerCards)
     let newDealerCards = [...dealerCards]
+    const playerSum = getSum(playerCards)
     while (newDealerSum < 16 || playerSum > newDealerSum) {
       const randomCard = getRandomCard([newDealerCards])
       newDealerCards.push(randomCard)
       newDealerSum += randomCard
     }
     setDealerCards([...newDealerCards])
-    setDealerSum(newDealerCards.reduce((total, card) => {
-      return total + card
-    }, 0))
     endGame(newDealerSum)
   }
 
@@ -102,6 +94,7 @@ function GameRoom() {
 
   // the end game logic: after the player decides to hit stand, the player didn't get blackjack or didn't go above 21 just by drawing new cards
   const endGame = (newDealerSum) => {
+    const playerSum = getSum(playerCards)
     if (playerSum == newDealerSum) {
       setMessage('Draw! - Money back!')
       return
@@ -126,9 +119,9 @@ function GameRoom() {
         <h1>Blackjack</h1>
         <p id="message-el">{message}</p>
         <p id="dealer-el">Dealer's cards: {renderedDealerCards}</p>
-        <p id="dealerSum-el">Dealer's sum: {dealerSum}</p>
+        <p id="dealerSum-el">Dealer's sum: {getSum(dealerCards)}</p>
         <p id="cards-el">Your cards: {renderedPlayerCards}</p>
-        <p id="sum-el">Sum: {playerSum}</p>
+        <p id="sum-el">Sum: {getSum(playerCards)}</p>
         <Button isAlive={isAlive} startGame={startGame} newCard={newCard} stand={stand}/>
         <p id="player-el">{user.name} : ${user.chips}</p>
         <p id="result-el"></p>
