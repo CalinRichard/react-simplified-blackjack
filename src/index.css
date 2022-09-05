@@ -5,6 +5,7 @@ body {
   background-size: cover;
   color: white;
   font-weight: bold;
+  
 }
 
 span{
@@ -44,6 +45,11 @@ button, input {
   margin: 2px;
 }
 
+button:hover {
+  cursor: pointer;
+  box-shadow: inset 300px 0 0 0 yellow;
+}
+
 input{
   background-color: rgb(216, 188, 115);
   margin-bottom: 10px;
@@ -52,3 +58,11 @@ input{
   padding-bottom: 2px;
 }
 
+.buttonDisabled{
+  background-color:rgb(157, 148, 148);
+}
+
+.buttonDisabled:hover{
+  cursor: default;
+  box-shadow: none;
+}
