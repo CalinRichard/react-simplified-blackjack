@@ -11,6 +11,16 @@ span{
   display: block;
 }
 
+#name-section{
+  float: left;
+  overflow: visible;
+  width: 0;
+}
+
+#name-section p{
+  width: 200px;
+}
+
 #game-section{
   text-align: center;
 }

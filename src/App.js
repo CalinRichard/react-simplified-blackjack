@@ -2,8 +2,10 @@ import { useState } from "react"
 
 function App() {
   // Setup global state
-  const [player, setPlayer] = useState('GUEST')
-  const [chips, setChips] = useState(200)
+  const [user, setUser] = useState({
+    name: 'GUEST',
+    chips: 200
+  })
   const [playerCards, setPlayerCards] = useState([])
   const [dealerCards, setDealerCards] = useState([])
   const [playerSum, setPlayerSum] = useState(0)
@@ -43,7 +45,7 @@ function App() {
     // dealer always shows 1 card untill player stands
     setDealerCards([dealerCard])
     setDealerSum(dealerCard)
-    // the newPlayerSum variable was defined in order to be able to be able to render the corect message via bustOrBj function in a synchronous way
+    // the newPlayerSum variable was defined in order to be able to render the corect message via bustOrBj function in a synchronous way
     let newPlayerSum = (firstCard + secondCard)
     bustOrBj(newPlayerSum)
   }
@@ -73,9 +75,9 @@ function App() {
     if (!isAlive) {
       return
     }
-    // as soon as the stand function is called, the isAlive state should return to it's initial state (false) in order for the player to be able to start a new game
+    // as soon as the stand function is called, the isAlive state will return to it's initial state (false) in order for the player to be able to start a new game
     setIsAlive(false)
-    // the two variables (newDealerSum and newDealerCards) were defined in order to be able to deal with the while loop in a synchronous way and to avoid changing the initial state
+    // the two variables (newDealerSum and newDealerCards) were defined in order to be able to deal with the while loop in a synchronous way and to avoid manually changing the react state
     let newDealerSum = dealerSum
     let newDealerCards = [...dealerCards]
     while (newDealerSum < 16 || playerSum > newDealerSum) {
@@ -99,37 +101,33 @@ function App() {
     if (newPlayerSum > 21) {
       setMessage('Bust! - You lose!')
       setIsAlive(false)
-      setChips(chips - 10)
+      setUser({...user, chips: user.chips - 10})
     }
     if (newPlayerSum == 21) {
       setMessage('BLACKJACK! - You win!')
       setIsAlive(false)
-      setChips(chips + 10)
+      setUser({...user, chips: user.chips + 10})
     }
   }
 
-  // the end game logics after the player decides to hit stand, case in which means the player didn't get blackjack or didn't go above 21 just by drawing new cards
+  // the end game logic: after the player decides to hit stand, the player didn't get blackjack or didn't go above 21 just by drawing new cards
   const endGame = (newDealerSum) => {
     if (playerSum == newDealerSum) {
       setMessage('Draw! - Money back!')
+      return
     }
     if (newDealerSum > playerSum && newDealerSum <= 21) {
       setMessage('You lose!')
-      setChips(chips - 10)
+      setUser({...user, chips: user.chips - 10})
+      return
     }
-    if (playerSum > newDealerSum && playerSum <= 21) {
       setMessage('You win!')
-      setChips(chips + 10)
-    }
-    if (playerSum <= 21 && newDealerSum > 21) {
-      setMessage('You win!')
-      setChips(chips + 10)
-    }
+      setUser({...user, chips: user.chips + 10})
   }
 
   const changeName = () => {
-    setPlayer(document.getElementById('input-name').value.toUpperCase())
-  }
+    setUser({...user, name: document.getElementById('input-name').value.toUpperCase()})
+   }
 
   return (
     <>
@@ -149,7 +147,7 @@ function App() {
         <button id="startGame-btn" onClick={startGame}>Start Game</button>
         <button id="newCard-btn" onClick={newCard}>New Card</button>
         <button id="stand-btn" onClick={stand}>Stand</button>
-        <p id="player-el">{player} : ${chips}</p>
+        <p id="player-el">{user.name} : ${user.chips}</p>
         <p id="result-el"></p>
       </span>
     </>
